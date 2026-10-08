@@ -1,0 +1,40 @@
+name: Build ArtyMods APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'server/public/**'
+      - 'scripts/configure_android.py'
+      - '.github/workflows/build-apk.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Configure app backend
+        env:
+          APP_URL: ${{ vars.ARTYMODS_API_URL }}
+        run: |
+          test -n "$APP_URL" || { echo 'Set repo variable ARTYMODS_API_URL to your https://domain'; exit 1; }
+          python3 scripts/configure_android.py "$APP_URL"
+      - name: Compile debug APK
+        run: gradle -p android assembleDebug --no-daemon
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk ArtyMods.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArtyMods-APK
+          path: ArtyMods.apk
+          retention-days: 30

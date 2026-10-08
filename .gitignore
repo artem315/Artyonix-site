@@ -1,0 +1,9 @@
+node_modules/
+.env
+server/data/*
+!server/data/.gitkeep
+server/uploads/*
+!server/uploads/.gitkeep
+android/app/build/
+android/.gradle/
+android/local.properties

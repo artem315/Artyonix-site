@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: artymods
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: AUTO_APPROVE
+        value: "false"
+      - key: APP_ORIGINS
+        value: https://app.artymods.local

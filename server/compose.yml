@@ -1,0 +1,18 @@
+services:
+  artymods:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: '3000'
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?Set a long ADMIN_TOKEN in your environment}
+      AUTO_APPROVE: 'false'
+      APP_ORIGINS: 'https://app.artymods.local'
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - artymods-data:/srv/artymods/data
+      - artymods-uploads:/srv/artymods/uploads
+      - ./public/downloads:/srv/artymods/public/downloads
+volumes:
+  artymods-data:
+  artymods-uploads:

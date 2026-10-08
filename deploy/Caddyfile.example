@@ -1,0 +1,5 @@
+# Replace mods.example.com with your actual DNS A/AAAA hostname.
+mods.example.com {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:3000
+}
